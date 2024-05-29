@@ -1,0 +1,13 @@
+.loaded {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.tryToLoad {
+  opacity: 0.5;
+  filter: blur(2.5px);
+}
+
+.main {
+  transition: 200ms all;
+}
