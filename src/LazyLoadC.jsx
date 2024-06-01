@@ -65,7 +65,13 @@ function LazyLoadC({
         }
       });
     },
-    [from, to]
+    [
+      from,
+      to,
+      beforeLoadCssClassName,
+      afterLoadCssClassName,
+      transitionCssClassName,
+    ]
   );
   const observer = useMemo(
     () =>

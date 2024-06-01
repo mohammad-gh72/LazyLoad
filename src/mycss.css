@@ -1,0 +1,12 @@
+.afterlol {
+  opacity: 1;
+  filter: blur(0);
+}
+.beforelol {
+  opacity: 0.5;
+  filter: blur(2.5px);
+}
+
+.lolmain {
+  transition: 200ms all;
+}

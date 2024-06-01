@@ -3,6 +3,7 @@ import loadedImage from "./assets/lazyimage.png";
 import LazyLoad from "./LazyLoad";
 import "./LazyLoad.css";
 import LazyLoadC from "./LazyLoadC";
+import "./mycss.css";
 function App() {
   const url = "http://www.omdbapi.com/?apikey=5bc11b&s='loop'";
 
@@ -227,9 +228,9 @@ function App() {
       <LazyLoadC
         from="src"
         to="replacesrc"
-        transitionCssClassName="main"
-        beforeLoadCssClassName="tryToLoad"
-        afterLoadCssClassName="loaded"
+        transitionCssClassName="lolmain"
+        beforeLoadCssClassName="beforelol"
+        afterLoadCssClassName="afterlol"
       >
         {images.map((image) => (
           <img
