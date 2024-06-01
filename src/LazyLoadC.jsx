@@ -11,6 +11,9 @@ function LazyLoadC({
   children,
   from,
   to,
+  transitionCssClassName,
+  beforeLoadCssClassName,
+  afterLoadCssClassName,
   root = null,
   rootMargin = 0,
   threshold = 1,
@@ -22,21 +25,26 @@ function LazyLoadC({
       entrys.forEach((entry) => {
         const target = entry.target;
         const tagName = target.tagName.toLowerCase();
+        target.classList.add(`${transitionCssClassName}`);
+        target.classList.add(`${beforeLoadCssClassName}`);
+
+        function css() {
+          target.classList.remove(`${beforeLoadCssClassName}`);
+          target.classList.add(`${afterLoadCssClassName}`);
+        }
         // this part only for images
 
         if (["img"].includes(tagName)) {
           if (entry.isIntersecting) {
             if (target.complete) {
               target[from] = target.dataset[to];
-              target.classList.remove("tryToLoad");
-              target.classList.add("loaded");
+              css();
               observer.unobserve(target);
             }
             if (!target.complete) {
               const handleInLoad = () => {
                 target[from] = target.dataset[to];
-                target.classList.remove("tryToLoad");
-                target.classList.add("loaded");
+                css();
                 observer.unobserve(target);
 
                 target.removeEventListener("load", handleInLoad);
@@ -51,8 +59,7 @@ function LazyLoadC({
         if (!["img"].includes(tagName)) {
           if (entry.isIntersecting) {
             target[from] = target.dataset[to];
-            target.classList.remove("tryToLoad");
-            target.classList.add("loaded");
+            css();
             observer.unobserve(target);
           }
         }
