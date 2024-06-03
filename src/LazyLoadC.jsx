@@ -6,11 +6,12 @@ import {
   useMemo,
   useRef,
 } from "react";
-import "./LazyLoad.css";
+
 function LazyLoadC({
   children,
   from,
   to,
+  videoLoading,
   transitionCssClassName,
   beforeLoadCssClassName,
   afterLoadCssClassName,
@@ -34,7 +35,7 @@ function LazyLoadC({
         }
         // this part only for images
 
-        if (["img"].includes(tagName)) {
+        if (tagName === "img") {
           if (entry.isIntersecting) {
             if (target.complete) {
               target[from] = target.dataset[to];
@@ -53,10 +54,35 @@ function LazyLoadC({
             }
           }
         }
+        //this part only for videos
+        if (tagName === "video") {
+          if (entry.isIntersecting) {
+            const sourceElement = target.querySelector("source");
+            if (sourceElement) {
+              const handleInLoad = () => {
+                sourceElement[from] = sourceElement.dataset[to];
+                target.load(); // Ensure the video element loads the new source
+                target.loop = false;
+                target.controls = true;
+                css();
+                observer.unobserve(target);
+                target.removeEventListener("canplay", handleInLoad);
+              };
+              if (target.readyState >= 4) {
+                handleInLoad();
+              }
+              if (!target.readyState < 4) {
+                target.loop = true;
+                target.controls = false;
+                target.play();
+                target.addEventListener("canplay", handleInLoad);
+              }
+            }
+          }
+        }
+        // this part just for simple tags like p
 
-        // this part for tags like p
-
-        if (!["img"].includes(tagName)) {
+        if (!["img", "video"].includes(tagName)) {
           if (entry.isIntersecting) {
             target[from] = target.dataset[to];
             css();

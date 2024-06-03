@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import loadedImage from "./assets/lazyimage.png";
+import videoLoading from "./assets/videoLoading.mp4";
 import LazyLoad from "./LazyLoad";
 import "./LazyLoad.css";
 import LazyLoadC from "./LazyLoadC";
@@ -241,6 +242,21 @@ function App() {
             src={loadedImage}
           />
         ))}
+      </LazyLoadC>
+      <LazyLoadC
+        from="src"
+        to="replacesrc"
+        transitionCssClassName="lolmain"
+        beforeLoadCssClassName="beforelol"
+        afterLoadCssClassName="afterlol"
+      >
+        <video width="520" height="340" controls>
+          <source
+            src={videoLoading}
+            data-replacesrc="https://caspian13.asset.aparat.com/aparat-video/99c7842e964c8dcb6b8064b8c17f319059156974-1080p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6Ijk2YWQ1MjY2ZDQ1ZTQ5MTU1NzA3YjE2YjJkODFhZDUwIiwiZXhwIjoxNzE3NDc0NjU1LCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.9x8tTF_jie-9AQKIO_kO2cfUnP0PLhP4cizrQ2vkZew"
+            type="video/mp4"
+          />
+        </video>
       </LazyLoadC>
     </div>
   );
