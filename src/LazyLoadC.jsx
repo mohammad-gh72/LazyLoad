@@ -12,6 +12,8 @@ function LazyLoadC({
   from,
   to,
   videoLoading,
+  videoPlaceHolderWidth,
+  videoPlaceHolderHeight,
   transitionCssClassName,
   beforeLoadCssClassName,
   afterLoadCssClassName,
@@ -55,34 +57,41 @@ function LazyLoadC({
           }
         }
         //this part only for videos
-        if (tagName === "video") {
+        if (
+          target.tagName.toLowerCase() === "div" &&
+          target.firstElementChild.tagName.toLowerCase() === "video"
+        ) {
+          const videoElement = target.firstElementChild;
+
+          videoElement.style.display = "none";
+          target.style.backgroundImage = `url(${videoLoading})`;
+          target.style.width = `${videoPlaceHolderWidth}px`;
+          target.style.height = `${videoPlaceHolderHeight}px`;
+          target.style.backgroundColor = "black";
+
           if (entry.isIntersecting) {
-            const sourceElement = target.querySelector("source");
-            if (sourceElement) {
-              const handleInLoad = () => {
-                sourceElement[from] = sourceElement.dataset[to];
-                target.load(); // Ensure the video element loads the new source
-                target.loop = false;
-                target.controls = true;
-                css();
-                observer.unobserve(target);
-                target.removeEventListener("canplay", handleInLoad);
-              };
-              if (target.readyState >= 4) {
-                handleInLoad();
-              }
-              if (!target.readyState < 4) {
-                target.loop = true;
-                target.controls = false;
-                target.play();
-                target.addEventListener("canplay", handleInLoad);
-              }
+            const handleInLoad = () => {
+              videoElement.style.display = "block";
+
+              target.parentElement.replaceChild(videoElement, target);
+              videoElement.load(); // Ensure the video element loads the new source
+              css();
+              observer.unobserve(videoElement);
+              videoElement.removeEventListener("canplay", handleInLoad);
+            };
+            if (videoElement.readyState >= 4) {
+              handleInLoad();
+            } else {
+              videoElement.addEventListener("canplay", handleInLoad);
             }
           }
         }
         // this part just for simple tags like p
 
-        if (!["img", "video"].includes(tagName)) {
+        if (
+          !["img", "video"].includes(tagName) ||
+          target?.firstElementChild?.tagName.toLowerCase() !== "video"
+        ) {
           if (entry.isIntersecting) {
             target[from] = target.dataset[to];
             css();
@@ -97,6 +106,9 @@ function LazyLoadC({
       beforeLoadCssClassName,
       afterLoadCssClassName,
       transitionCssClassName,
+      videoLoading,
+      videoPlaceHolderHeight,
+      videoPlaceHolderWidth,
     ]
   );
   const observer = useMemo(
