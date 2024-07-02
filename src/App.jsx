@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import loadedImage from "./assets/lazyimage.png";
 import loadedImage2 from "./assets/2.png";
-import videoLoading from "./assets/videoLoading.mp4";
-import LazyLoad from "./LazyLoad";
+
 import "./LazyLoad.css";
 import LazyLoadC from "./LazyLoadC";
 import "./mycss.css";
