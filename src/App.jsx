@@ -260,6 +260,25 @@ function App() {
           </video>
         </div>
       </LazyLoadC>
+
+      <LazyLoadC
+        audioLoading={loadedImage2}
+        audioPlaceHolderWidth={420}
+        audioPlaceHolderHeight={70}
+        transitionCssClassName="lolmain"
+        beforeLoadCssClassName="beforelol"
+        afterLoadCssClassName="afterlol"
+      >
+        <div>
+          <audio width="420" controls>
+            <source
+              src="https://irsv.upmusics.com/99/Mohammad%20Motamedi%20-%20Tehrane%20Ashegh%207(320).mp3"
+              type="audio/mpeg"
+            />
+            Your browser does not support the audio tag.
+          </audio>
+        </div>
+      </LazyLoadC>
     </div>
   );
 }

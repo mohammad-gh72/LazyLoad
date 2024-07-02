@@ -11,6 +11,9 @@ function LazyLoadC({
   children,
   from,
   to,
+  audioLoading,
+  audioPlaceHolderWidth,
+  audioPlaceHolderHeight,
   videoLoading,
   videoPlaceHolderWidth,
   videoPlaceHolderHeight,
@@ -79,18 +82,49 @@ function LazyLoadC({
               observer.unobserve(videoElement);
               videoElement.removeEventListener("canplay", handleInLoad);
             };
-            if (videoElement.readyState >= 4) {
+            if (videoElement.readyState === 4) {
               handleInLoad();
             } else {
               videoElement.addEventListener("canplay", handleInLoad);
             }
           }
         }
+
+        //this part only for audio files
+        if (
+          target.tagName.toLowerCase() === "div" &&
+          target.firstElementChild.tagName.toLowerCase() === "audio"
+        ) {
+          const audioElement = target.firstElementChild;
+          audioElement.style.display = "none";
+          target.style.backgroundImage = `url(${audioLoading})`;
+          target.style.width = `${audioPlaceHolderWidth}px`;
+          target.style.height = `${audioPlaceHolderHeight}px`;
+          target.style.backgroundColor = "black";
+
+          if (entry.isIntersecting) {
+            const handleInLoad = () => {
+              audioElement.style.display = "block";
+              target.parentElement.replaceChild(audioElement, target);
+              audioElement.load(); // Ensure the audio element loads the new source
+              css();
+              observer.unobserve(audioElement);
+              audioElement.removeEventListener("canplaythrough", handleInLoad);
+            };
+            if (audioElement.readyState === 4) {
+              handleInLoad();
+            } else {
+              audioElement.addEventListener("canplaythrough", handleInLoad);
+            }
+          }
+        }
+
         // this part just for simple tags like p
 
         if (
-          !["img", "video"].includes(tagName) ||
-          target?.firstElementChild?.tagName.toLowerCase() !== "video"
+          !["img", "video", "audio"].includes(tagName) ||
+          target?.firstElementChild?.tagName.toLowerCase() !== "video" ||
+          target?.firstElementChild?.tagName.toLowerCase() !== "audio"
         ) {
           if (entry.isIntersecting) {
             target[from] = target.dataset[to];
@@ -109,6 +143,9 @@ function LazyLoadC({
       videoLoading,
       videoPlaceHolderHeight,
       videoPlaceHolderWidth,
+      audioLoading,
+      audioPlaceHolderHeight,
+      audioPlaceHolderWidth,
     ]
   );
   const observer = useMemo(
